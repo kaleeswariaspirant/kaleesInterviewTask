@@ -1,0 +1,33 @@
+package com.example.leadmanagementproject;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class LeadService {
+	 private final LeadRepository repository;
+
+	    public LeadService(LeadRepository repository) {
+	        this.repository = repository;
+	    }
+
+	    public Lead saveLead(Lead lead) {
+	        return repository.save(lead);
+	    }
+
+	    public List<Lead> getAllLeads() {
+	        return repository.findAll();
+	    }
+
+	    public List<Lead> searchLeads(String keyword) {
+	        return repository.findByNameContainingOrMobileContaining(keyword, keyword);
+	    }
+
+	    public Lead updateStatus(Long id, String status) {
+	        Lead lead = repository.findById(id).orElseThrow();
+	        lead.setStatus(status);
+	        return repository.save(lead);
+	    }
+
+}
