@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h2>Leads Dashboard</h2>
+
+<input type="text" id="search" placeholder="Search by Name or Mobile">
+<button onclick="loadLeads()">Search</button>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Service</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody id="leadTable"></tbody>
+</table>
+
+<script>
+function loadLeads(){
+    let search = document.getElementById("search").value;
+    fetch("/api/leads?search="+search)
+    .then(res=>res.json())
+    .then(data=>{
+        let table="";
+        data.forEach(lead=>{
+            table+=`
+            <tr>
+                <td>${lead.name}</td>
+                <td>${lead.mobile}</td>
+                <td>${lead.email}</td>
+                <td>${lead.service}</td>
+                <td>${lead.status}</td>
+                <td>
+                    <select onchange="updateStatus(${lead.id}, this.value)">
+                        <option>New</option>
+                        <option>Prospect</option>
+                        <option>Hot</option>
+                        <option>Closed</option>
+                    </select>
+                </td>
+            </tr>`;
+        });
+        document.getElementById("leadTable").innerHTML=table;
+    });
+}
+
+function updateStatus(id, status){
+    fetch("/api/leads/"+id+"?status="+status, {method:"PUT"})
+    .then(()=>loadLeads());
+}
+
+window.onload=loadLeads;
+</script>
+</body>
+</html>
