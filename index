@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lead Form</title>
+ <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h2>Submit Your Details</h2>
+
+<form id="leadForm">
+    <input type="text" placeholder="Name" id="name" required><br>
+    <input type="text" placeholder="Mobile" id="mobile" required><br>
+    <input type="email" placeholder="Email" id="email"><br>
+
+    <select id="service">
+        <option>WhatsApp Automation</option>
+        <option>CRM Development</option>
+        <option>Software Development</option>
+    </select><br>
+
+    <textarea placeholder="Message" id="message"></textarea><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<p id="successMsg"></p>
+
+<script>
+document.getElementById("leadForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    fetch("/api/leads", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            name: name.value,
+            mobile: mobile.value,
+            email: email.value,
+            service: service.value,
+            message: message.value
+        })
+    }).then(res => {
+        document.getElementById("successMsg").innerText="Lead Submitted Successfully!";
+        document.getElementById("leadForm").reset();
+    });
+});
+</script>
+</body>
+</html>
