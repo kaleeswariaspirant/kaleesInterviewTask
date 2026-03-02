@@ -1,0 +1,29 @@
+@RestController
+@RequestMapping("/api/leads")
+@CrossOrigin
+public class LeadController {
+	 private final LeadService service;
+
+	    public LeadController(LeadService service) {
+	        this.service = service;
+	    }
+
+	    @PostMapping
+	    public Lead saveLead(@RequestBody Lead lead) {
+	        return service.saveLead(lead);
+	    }
+
+	    @GetMapping
+	    public List<Lead> getAllLeads(@RequestParam(required = false) String search) {
+	        if (search != null) {
+	            return service.searchLeads(search);
+	        }
+	        return service.getAllLeads();
+	    }
+
+	    @PutMapping("/{id}")
+	    public Lead updateStatus(@PathVariable Long id, @RequestParam String status) {
+	        return service.updateStatus(id, status);
+	    }
+
+}
